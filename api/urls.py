@@ -6,6 +6,7 @@ urlpatterns = [
     path('register/', UserRegistrationView.as_view(), name='user-register'),
     path('user/current/image/', UserDataView.as_view(), name='userdata'),
     path('user/current/images/', UserImagesView.as_view(), name='user-images-list'),
+    path('user/current/posts/', CurrentUserPostsView.as_view(), name='user-posts-list'),
     path('user/current/', UserCurrentDetailView.as_view(), name='user-current-detail'),
     path('user/<int:id>', UserDetailView.as_view(), name='user-detail'),
     path('pages/', PageListView.as_view(), name='pages-list'),

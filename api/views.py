@@ -338,6 +338,32 @@ class PostView(APIView):
             return Response({"detail": "Post nie został znaleziony."}, status=status.HTTP_404_NOT_FOUND)
 
 
+class CurrentUserPostsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        posts = Post.objects.filter(created_by=user)
+
+        data = [{
+            "id": post.id,
+            "title": post.title,
+            "created_at": post.created_at,
+            "status": post.status.name,
+            "content": post.content,
+            "author": {
+                "id": post.created_by.id,
+                "first_name": post.created_by.first_name,
+                "last_name": post.created_by.last_name,
+                "image": post.created_by.userdata.image.url
+            }
+        }
+            for post in posts]
+
+        return Response(data, status=status.HTTP_200_OK)
+
+
+
 class TemplateListView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
