@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <script src="https://cdn.ckeditor.com/4.20.2/standard/ckeditor.js"></script>
+    <script src="{% static 'js/template.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="w-full flex flex-col">
+        {% for message in messages %}
+            <div class="flex items-center p-4 mb-4 text-sm
+                {% if message.level == 40 %} text-red-800 border-red-300 bg-red-50 {% endif %}
+                {% if message.level == 30 or message.level == 10 %} text-yellow-800 border-yellow-300 bg-yellow-50 {% endif %}
+                {% if message.level == 25 %} text-green-800 border-green-300 bg-green-50 {% endif %}
+                {% if message.level == 20 %} text-blue-800 border-blue-300 bg-blue-50 {% endif %}
+                rounded-lg" role="alert">
+                <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                </svg>
+                <span class="sr-only">Info</span>
+                <div>
+                    <span class="font-medium">
+                        {% if message.level == 40 %}
+                            Błąd!
+                        {% elif message.level == 30 or message.level == 10 %}
+                            Ostrzeżenie!
+                        {% elif message.level == 25 %}
+                            Sukces!
+                        {% elif message.level == 20 %}
+                            Informacja!
+                        {% endif %}
+                    </span>
+                    {{ message }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <p class="font-medium text-gray-900 text-2xl mb-7">
+            Edytuj szablon #{{ template.id }}
+    </p>
+
+        <form method="post" id="data-form">
+        <div class="w-full flex lg:flex-row flex-col justify-around">
+            <div class="mt-8 w-1/3">
+                <div class="mt-4">
+                    <div class="p-6 bg-white rounded-md shadow-md">
+                        <h2 class="text-lg text-gray-700 font-semibold">Informacje o szablonie</h2>
+
+                        <div>
+                            {% csrf_token %}
+                            <div class="grid grid-cols-1 gap-6 mt-4">
+                                <div>
+                                    <label class="text-gray-700" for="name">Nazwa</label>
+                                    <input value="{{ template.name }}" id="name" name="name" class="form-input w-full mt-2 rounded-md focus:border-indigo-600" type="text">
+                                </div>
+
+                                <div>
+                                    <label class="text-gray-700" for="description">Opis</label>
+                                    <textarea id="description" name="description" class="form-input w-full mt-2 rounded-md focus:border-indigo-600" type="email">{{ template.description }}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end mt-4">
+                                <button onclick="submitForm(event)" id="submit-button" class="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-gray-200 rounded-md focus:outline-none focus:bg-blue-800">Zapisz</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 w-1/2">
+                <div class="mt-4">
+                    <div class="p-6 bg-white rounded-md shadow-md">
+                        <h2 class="text-lg text-gray-700 font-semibold capitalize mb-5">Szablon</h2>
+                            <textarea name="content" id="editor" rows="10" cols="80">{{ template.html_structure }}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="w-full flex lg:flex-row flex-col justify-around">
+            <div class="mt-8 w-1/3">
+                <div class="mt-4">
+                    <div class="p-6 bg-white rounded-md shadow-md">
+                        <h2 class="text-lg text-gray-700 font-semibold">Pola w szablonie</h2>
+                        <div id="template-fields-container">
+                            {% for field in fields %}
+                                <div id="template-field">
+                                    <div class="mt-4">
+                                        <label class="text-gray-700" for="field-name-{{ forloop.counter }}">Nazwa pola</label>
+                                        <input value="{{ field.name }}" name="field-name-{{ forloop.counter }}" id="field-name-{{ forloop.counter }}" class="form-input w-full mt-2 rounded-md focus:border-indigo-600" type="text">
+                                    </div>
+                                    <div>
+                                        <label class="text-gray-700" for="field-type-{{ forloop.counter }}">Typ pola</label>
+                                        <select name="field-type-{{ forloop.counter }}" id="field-type-{{ forloop.counter }}" class="form-input w-full mt-2 rounded-md focus:border-indigo-600" type="text">
+                                            <option value="" disabled selected>Wybierz typ pola</option>
+                                            {% for field_type in field_types %}
+                                                <option value="{{ field_type.id }}" {% if field_type == field.type %} selected {% endif %}>{{ field_type.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <hr class="h-px my-8 bg-gray-200 border-0">
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div id="template-field" style="display: none">
+                            <div class="mt-4">
+                                <label class="text-gray-700" for="field-name">Nazwa pola</label>
+                                <input id="field-name" class="form-input w-full mt-2 rounded-md focus:border-indigo-600" type="text">
+                            </div>
+                            <div>
+                                <label class="text-gray-700" for="field-type">Typ pola</label>
+                                <select id="field-type" class="form-input w-full mt-2 rounded-md focus:border-indigo-600" type="text">
+                                    <option value="" disabled selected>Wybierz typ pola</option>
+                                    {% for field_type in field_types %}
+                                        <option value="{{ field_type.id }}">{{ field_type.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <hr class="h-px my-8 bg-gray-200 border-0">
+                        </div>
+
+                        <button onclick="fieldSynchronize()" type="button" class="mt-3 px-3 py-2 text-sm font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                                <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="bevel"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+                                Synchronizuj pola
+                        </button>
+                        <input value="{{ fields | length }}" id="fields-numbers" name="fields-numbers" type="number" style="display:none;">
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 w-1/2">
+                <div class="mt-4">
+                    <div class="p-6 bg-white rounded-md shadow-md text-sm">
+                        <h2 class="text-lg text-gray-700 font-semibold capitalize mb-2">Poradnik</h2>
+                        <p>Aby dodać szablon do aplikacji, wykonaj następujące kroki:</p>
+                        <ol class="list-decimal pl-5">
+                            <li><strong>Edytuj szablon</strong>: W formularzu znajdziesz pole tekstowe z wbudowanym <em>CKEditor</em>. W tym edytorze możesz napisać treść szablonu HTML. Możesz używać specjalnych znaczników w formacie <em>&#123;&#123;placeholder_name&#125;&#125;</em>, które później będą dynamicznie zamieniane na pola formularza.</li>
+
+                            <li><strong>Synchronizuj pola</strong>: Po zakończeniu edycji, kliknij przycisk <strong>"Synchronizuj pola"</strong>. Aplikacja automatycznie wykryje wszystkie placeholdery w szablonie i doda je jako pola formularza, które będziesz musiał opisać.</li>
+
+                            <li><strong>Zdefiniuj typy pól</strong>: W formularzu pojawią się nowe pola dla każdego wykrytego znacznika. Określ typ każdego pola, aby użytkownicy wiedzieli, co mają wprowadzić, gdy będą używać szablonu.</li>
+
+                            <li><strong>Zapisz szablon</strong>: Po wypełnieniu formularza z typami pól, zapisz szablon. Będzie on gotowy do użycia w aplikacji.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </form>
+{% endblock %}
+
+{% block end_file %}
+    <script>
+        CKEDITOR.replace('editor', {
+        allowedContent: true
+    });
+    </script>
+{% endblock %}

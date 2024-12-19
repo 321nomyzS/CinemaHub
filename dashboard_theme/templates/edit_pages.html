@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <!-- DataTables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    <script src="{% static 'js/pages.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+        <div class="w-full flex flex-col">
+            {% for message in messages %}
+                <div class="flex items-center p-4 mb-4 text-sm
+                    {% if message.level == 40 %} text-red-800 border-red-300 bg-red-50 {% endif %}
+                    {% if message.level == 30 or message.level == 10 %} text-yellow-800 border-yellow-300 bg-yellow-50 {% endif %}
+                    {% if message.level == 25 %} text-green-800 border-green-300 bg-green-50 {% endif %}
+                    {% if message.level == 20 %} text-blue-800 border-blue-300 bg-blue-50 {% endif %}
+                    rounded-lg" role="alert">
+                    <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                    </svg>
+                    <span class="sr-only">Info</span>
+                    <div>
+                        <span class="font-medium">
+                            {% if message.level == 40 %}
+                                Błąd!
+                            {% elif message.level == 30 or message.level == 10 %}
+                                Ostrzeżenie!
+                            {% elif message.level == 25 %}
+                                Sukces!
+                            {% elif message.level == 20 %}
+                                Informacja!
+                            {% endif %}
+                        </span>
+                        {{ message }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="w-full flex flex-row justify-between">
+            <p class="font-medium text-gray-900 text-2xl mb-7">Edytuj kolejność</p>
+            <button onclick="saveData('{{ csrf_token }}', '{% url 'show_pages' %}')" id="save-button" type="button" class="h-1/2 px-3 py-2 text-sm font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="bevel"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                Zapisz
+            </button>
+        </div>
+
+        <table class="w-full table-fixed" id="data-table">
+            <thead class="">
+              <tr class="bg-white my-5">
+                <th style="width: 10%" class="py-5 px-6 text-left text-gray-600 font-bold uppercase">Kolejność</th>
+                <th style="width: 5%" class="py-5 px-6 text-left text-gray-600 font-bold uppercase">ID</th>
+                <th style="width: 35%" class="py-5 px-6 text-left text-gray-600 font-bold uppercase">Tytuł</th>
+                <th style="width: 25%" class="py-5 px-6 text-left text-gray-600 font-bold uppercase">Data utworzenia</th>
+                <th style="width: 15%" class="py-5 px-6 text-left text-gray-600 font-bold uppercase">Akcje</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white">
+              {% for page in pages %}
+              <tr>
+                <td class="py-5 w-2 border-b border-r border-gray-200">{{ forloop.counter }}</td>
+                <td class="py-5 w-2 border-b border-r border-gray-200">{{ page.id }}</td>
+                <td class="py-5 px-6 border-b border-r border-gray-200">{{ page.title }}</td>
+                <td class="py-5 px-6 border-b border-r border-gray-200">{{ page.created_at | date:'Y-m-d H:m:s' }}</td>
+
+                <td class="py-5 px-6 border-b border-r border-gray-200 flex flex-row justify-around">
+                    <button id="button-down" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2 text-center inline-flex items-center me-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="bevel"><path d="M12 5v13M5 12l7 7 7-7"/></svg>
+                    </button>
+                    <button id="button-up" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2 text-center inline-flex items-center me-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="bevel"><path d="M12 19V6M5 12l7-7 7 7"/></svg>
+                    </button>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="text-center font-normal leading-normal text-sm">No pages found</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+      </table>
+
+
+    <script>
+        $(document).ready( function () {
+            $('#data-table').DataTable({
+                "paging": false,  // Wyłącza paginację
+                "ordering": true,  // Wyłącza sortowanie
+                "info": false,  // Wyłącza informacje o stronach
+                "searching": false  // Wyłącza pasek wyszukiwania
+            });
+        } );
+    </script>
+{% endblock %}

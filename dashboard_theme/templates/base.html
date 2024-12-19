@@ -1,0 +1,99 @@
+{% load static tailwind_tags %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <title>CinemaHub Dashboard</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{% tailwind_css %}
+        {% block extra_head %}{% endblock %}
+	</head>
+
+	<body class="bg-gray-50">
+    <div class="flex flex-row h-screen bg-gray-100">
+        <aside id="sidebar" class="h-full flex flex-shrink-0 flex-col w-64 transition-width duration-75" aria-label="Sidebar">
+            <div class="flex items-center justify-center h-16 bg-gray-800 border-r border-b border-b-gray-700">
+                    <span class="text-gray-900 font-bold uppercase text-white">Cinema Hub</span>
+            </div>
+          <div class="relative flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-gray-800 pt-0">
+            <div class="flex-1 flex flex-col pb-4 overflow-y-auto">
+              <div class="flex-1 px-3 bg-gray-800 divide-y space-y-1">
+                <ul class="space-y-2 pb-2 pt-2">
+                  <li>
+                      <a href="{% url 'show_movies' %}" class="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-700 group">
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaaaaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="bevel"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>
+                        <span class="ml-3 leading-none text-white">Filmy</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="{% url 'show_members' %}" class="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-700 group">
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaaaaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="bevel"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        <span class="ml-3 leading-none text-white">Obsada</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="{% url 'show_pages' %}" class="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-700 group">
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaaaaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="bevel"><path d="M13 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V9l-7-7z"/><path d="M13 3v6h6"/></svg>
+                        <span class="ml-3 leading-none text-white">Strony</span>
+                      </a>
+                  </li>
+                    <li>
+                      <a href="{% url 'show_templates' %}" class="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-700 group">
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaaaaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="bevel"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                        <span class="ml-3 leading-none text-white">Szablony</span>
+                      </a>
+                  </li>
+                     <hr class="h-px my-8 bg-gray-700 border-0">
+                    <li>
+                      <a href="{% url 'show_users' %}" class="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-700 group">
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaaaaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="bevel"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <span class="ml-3 leading-none text-white">Użytkownicy</span>
+                      </a>
+                  </li>
+                    <li>
+                      <a href="{% url 'show_posts' %}" class="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-700 group">
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaaaaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="bevel"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon></svg>
+                        <span class="ml-3 leading-none text-white">Posty</span>
+                      </a>
+                  </li>
+
+                    <hr class="h-px my-8 bg-gray-700 border-0">
+                    <li>
+                      <a href="#" class="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-700 group">
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaaaaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="bevel"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+                        <span class="ml-3 leading-none text-white">Ustawienia</span>
+                      </a>
+                  </li>
+                    <li>
+                      <a href="{% url 'logout_tunnel' %}" class="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-700 group">
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaaaaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="bevel"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon></svg>
+                        <span class="ml-3 leading-none text-white">Wyloguj</span>
+                      </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </aside>
+        <div class="flex flex-col w-full">
+            <div class="flex items-center justify-between h-16 bg-white border-b border-gray-200">
+                <div class="flex items-center pr-4 flex-1 justify-end">
+                    <div class="justify-end flex flex-col mr-5">
+                        <p class="text-lg">{{ user.first_name }} {{ user.last_name }}</p>
+                        <p class="text-sm">{% if user.is_superuser %}Administrator{% elif user.is_stuff %}Moderator{% else %}Użytkownik{% endif %}</p>
+                    </div>
+                    <img class="rounded-full w-12 h-12 object-cover" src="{{ user.userdata.image.url }}" alt="{{ user.first_name }} {{ user.last_name }}">
+                </div>
+            </div>
+            <div class="p-4 overflow-y-auto flex-1">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+        </div>
+    </div>
+    {% block end_file %}{% endblock %}
+	</body>
+</html>
