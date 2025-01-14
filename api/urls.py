@@ -12,6 +12,7 @@ urlpatterns = [
     path('pages/', PageListView.as_view(), name='pages-list'),
     path('page/<int:pk>/', PageDetailView.as_view(), name='page-detail'),
     path('category/', CategoryListView.as_view(), name='category-list'),
+    path('recent/', RecentMovieListView.as_view(), name='recent-movies-list'),
     path('movies/', MovieListView.as_view(), name='movies-list'),
     path('movie/<int:id>/', MovieDetailView.as_view(), name='movie-detail'),
     path('upload/', UploadImageView.as_view(), name='upload-images'),

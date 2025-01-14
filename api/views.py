@@ -188,6 +188,15 @@ class CategoryListView(APIView):
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
 
+class RecentMovieListView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request):
+        movies = Movie.objects.all()
+
+        movies = movies.order_by("-release_date")[:5]
+        serializer = MoviesSerializer(movies, many=True)
+        return Response(serializer.data)
 
 class MovieListView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -196,6 +205,7 @@ class MovieListView(APIView):
         category_name = request.query_params.get('category', None)
         director_id = request.query_params.get('director_id', None)
         crew_member_id = request.query_params.get('crew_member_id', None)
+
 
         movies = Movie.objects.all()
         if category_name:
