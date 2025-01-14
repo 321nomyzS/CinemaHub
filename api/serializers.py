@@ -142,6 +142,16 @@ class MovieDetailSerializer(serializers.ModelSerializer):
         return MovieCrewMemberSerializer(crew_members, many=True).data
 
 
+class CrewDetailSerializer(serializers.ModelSerializer):
+    movies = serializers.SerializerMethodField()
+    class Meta:
+        model = CrewMember
+        fields = ['id', 'first_name', 'last_name', 'birth_date', 'description', 'image', 'movies']
+
+    def get_movies(self, obj):
+        movies = Movie.objects.filter(moviecrewmember__crew_member_id=obj.id)
+        return MoviesSerializer(movies, many=True).data
+
 class PostCreateSerializer(serializers.Serializer):
     title = serializers.CharField(max_length=150)
     content = serializers.CharField(required=False, allow_blank=True)

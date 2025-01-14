@@ -234,6 +234,16 @@ class MovieDetailView(APIView):
         return Response(serializer.data)
 
 
+class CrewDetailView(APIView):
+    def get(self, request, id):
+        try:
+            crew_member = CrewMember.objects.get(id=id)
+        except CrewMember.DoesNotExist:
+            return Response({'error': 'Crew Member not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = CrewDetailSerializer(crew_member)
+        return Response(serializer.data)
+
 class PostCreateView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 

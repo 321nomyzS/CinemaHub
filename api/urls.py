@@ -15,6 +15,7 @@ urlpatterns = [
     path('recent/', RecentMovieListView.as_view(), name='recent-movies-list'),
     path('movies/', MovieListView.as_view(), name='movies-list'),
     path('movie/<int:id>/', MovieDetailView.as_view(), name='movie-detail'),
+    path('crew/<int:id>/', CrewDetailView.as_view(), name='crew-detail'),
     path('upload/', UploadImageView.as_view(), name='upload-images'),
     path('post/', PostCreateView.as_view(), name='post-create'),
     path('post/details/<int:id>', PostDetailAPIView.as_view(), name='post-create'),
