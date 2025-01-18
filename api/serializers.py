@@ -141,6 +141,20 @@ class MovieDetailSerializer(serializers.ModelSerializer):
         crew_members = MovieCrewMember.objects.filter(movie=obj).select_related('crew_member', 'role')
         return MovieCrewMemberSerializer(crew_members, many=True).data
 
+class MovieOfCrewSerializer(serializers.ModelSerializer):
+    roles = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Movie
+        fields = ['id', 'poster', 'roles']
+
+    def get_roles(self, obj):
+        crew_member = self.context.get('crew_member')
+        if crew_member:
+            credit_records = MovieCrewMember.objects.filter(movie=obj, crew_member=crew_member).select_related('role')
+            roles = {credit.role.name for credit in credit_records}
+            return list(roles)
+        return None
 
 class CrewDetailSerializer(serializers.ModelSerializer):
     movies = serializers.SerializerMethodField()
@@ -149,8 +163,8 @@ class CrewDetailSerializer(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name', 'birth_date', 'description', 'image', 'movies']
 
     def get_movies(self, obj):
-        movies = Movie.objects.filter(moviecrewmember__crew_member_id=obj.id)
-        return MoviesSerializer(movies, many=True).data
+        movies = Movie.objects.filter(moviecrewmember__crew_member_id=obj.id).distinct()
+        return MovieOfCrewSerializer(movies, many=True, context={'crew_member': obj}).data
 
 class PostCreateSerializer(serializers.Serializer):
     title = serializers.CharField(max_length=150)

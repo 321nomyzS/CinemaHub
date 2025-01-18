@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-s-d=g#_4vff&e0nuc$w=cjr_5%b&+)r&(ka$+(ls-03z^wt2$c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -148,7 +148,6 @@ LOGIN_URL = "/login"
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_DOMAIN = 'localhost'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -164,6 +163,8 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
