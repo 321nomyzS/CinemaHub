@@ -180,10 +180,18 @@ class PostCreateSerializer(serializers.Serializer):
 
 class PostSerializer(serializers.ModelSerializer):
     created_by = PageAuthorSerializer()
+    poster = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'content', 'status', 'created_at', 'edited_at', 'published_at', 'movie', 'created_by']
+        fields = ['id', 'title', 'content', 'status', 'created_at', 'edited_at', 'published_at', 'movie', 'poster', 'created_by']
+
+    def get_poster(self, obj):
+        if obj.movie:
+            # Assuming the movie instance has a 'poster' field
+            return obj.movie.poster.url if obj.movie.poster else None
+        return None
+
 
 
 class TemplateFieldSerializer(serializers.ModelSerializer):

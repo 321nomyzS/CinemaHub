@@ -224,6 +224,8 @@ class MovieListView(APIView):
 
 
 class MovieDetailView(APIView):
+    permission_classes = [AllowAny]
+
     def get(self, request, id):
         try:
             movie = Movie.objects.get(id=id)
@@ -235,6 +237,8 @@ class MovieDetailView(APIView):
 
 
 class CrewDetailView(APIView):
+    permission_classes = [AllowAny]
+
     def get(self, request, id):
         try:
             crew_member = CrewMember.objects.get(id=id)
@@ -419,7 +423,8 @@ class PostListView(APIView):
                      "first_name": post.created_by.first_name,
                      "last_name": post.created_by.last_name,
                      "image": post.created_by.userdata.image.url
-                 }
+                 },
+                "poster": post.movie.poster.url
                  }
                 for post in posts]
 
