@@ -313,7 +313,9 @@ class PostView(APIView):
             return Response({"error": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
 
         # Check if the user is the author of the post
-        if post.created_by != request.user or request.user.is_staff:
+        if post.created_by != request.user and not request.user.is_staff:
+            print(post.created_by)
+            print(request.user)
             return Response({"error": "You do not have permission to edit this post."},
                             status=status.HTTP_403_FORBIDDEN)
 
@@ -404,7 +406,7 @@ class PostListView(APIView):
         movie_id = request.query_params.get('movie_id', None)
         created_by_id = request.query_params.get('created_by_id', None)
 
-        posts = Post.objects.all().order_by('-created_at').filter(status__id__gt=0)
+        posts = Post.objects.all().order_by('-created_at').filter(status__id__gt=1)
 
         if movie_id:
             posts = posts.filter(movie_id=movie_id)
