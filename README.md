@@ -45,9 +45,9 @@ This repository contains:
 
 CinemaHub is divided into 3 main components:
 
-- 🧠 **Backend (Django)** – core logic and API
-- 🌐 **Frontend (Svelte)** – public-facing blog UI *(external)*
-- 🛡️ **Admin Panel (Django Admin)** – content and user management
+- 🧠 **Backend (Django REST framework)** – core logic and API
+- 🌐 **Frontend (Svelte)** – public-facing blog UI *([external](https://github.com/jedrzej-gorski/sveltekit-landing-daisy))*
+- 🛡️ **Custom Admin Panel (Django)** – content and user management
 
 ---
 
